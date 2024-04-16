@@ -1,0 +1,96 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+    <h2 style="margin-bottom: 15px;">Listing: {{item.title}}</h2>
+
+    {%if item.isActive == False and user == item.price.user %}
+        <div class="alert alert-success" role="alert">
+            Congragulations! You have won the bidding.
+        </div>
+    {% endif %}
+
+
+    <div>
+        {% if user == item.owner %}
+
+            <form method="post" action="{% url 'item' item.id %}" style="margin-bottom: 25px;">
+                {% csrf_token %}
+                <input type="hidden" name="CloseBiding">
+                <button type="submit" class="btn btn-success">Close bidding</button>
+            </form>
+
+        {% endif %}
+
+
+        <form method="post" action="{% url 'item' item.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="listing" value="{{ item.id }}">
+            <button type="submit" class="btn btn-secondary">
+                {% if added %}
+                    Remove from Watchlist
+                {% else %}
+                    Add to Watchlist
+                {% endif %}
+            </button>
+        </form>
+
+    
+    </div>
+
+
+    <div style="margin-top: 20px;">
+        <img src="{{item.image}}" alt="{{item.description}}" style="max-width: 30%; max-height: 25%;">
+    </div>
+
+    <span style="font-family: Arial; margin-top: 5px; font-size: 20px;">{{item.description}}</span>
+
+    <div style="font-weight: bolder; font-size: 25px;">{{item.price}}$</div>
+    <hr style="color: black;">
+
+    <span style="color: red;">{{message}}</span>
+
+    {%if item.isActive %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+            <label for="formGroupExampleInput">{{item.num_of_bids}} bid(s) so far. Your bid is the current bid.</label>
+            <input type="float" min="0" name="bidding" class="form-control" id="formGroupExampleInput" placeholder="Add your bid">
+            </div>
+        </form>
+    {% endif %}
+
+    <h2>Details:</h2>
+    <ul>
+        <li>Listed by: <span style="color: blue;">{{item.owner}}</span></li>
+        <li>Category: {{item.category}}</li>
+    </ul>
+
+    <hr style="border: 2px solid black;">
+
+    <h2>Add your Comment:</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Comment here" name="comment">
+        </div>
+    </form>
+
+    <h2 style="margin-top: 25px; margin-bottom: 15px;">Comments:</h2>
+        {% for comment in comments %}
+            <div class="card">
+                <div class="card-header">
+                {{comment.owner}}
+                </div>
+                <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>{{comment.text}}</p>
+                    <footer class="blockquote-footer">{{comment.dateAndTime}} </footer>
+                </blockquote>
+                </div>
+            </div>
+            {%empty%} <span>No comments so far.</span>
+        {% endfor %}
+
+    
+{% endblock %}

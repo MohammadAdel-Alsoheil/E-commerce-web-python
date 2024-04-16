@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+    <h2>You have Won:</h2>
+
+    <ul>
+        {% for item in Won_Items %}
+            {% if item.price.user == user %}
+                <li>You have won a <a href="{% url 'item' item.id %}">{{ item.title }}</a></li>
+            {% endif %}
+        {% empty %}
+            <li>You have not won anything yet!</li>
+        {% endfor %}
+    </ul>
+    
+    
+{% endblock %}

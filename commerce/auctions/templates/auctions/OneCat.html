@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+    <h2>Category: {{cat}}</h2>
+
+    {% for object in objects %}
+
+        {% if object.isActive == True %}
+        <a style="display:block; color:black" href="{% url 'item' object.id %}">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                <div class="col-md-4">
+                    <img src={{object.image}} class="img-fluid rounded-start" alt={{object.description}}>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                    <h5 class="card-title">{{object.title}}</h5>
+                    <p class="card-text">Price: {{object.price}}$</p>
+                    <p class="card-text">{{object.description}}</p>
+                    <p class="card-text"><small class="text-muted"> created on {{object.dateAndTime}}</small></p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+
+        {% empty %} <span >This Category has no Items</span>
+
+    {% endfor %}
+    
+{% endblock %}
